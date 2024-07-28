@@ -2,13 +2,11 @@ from django.db import models
 
 
 class Advertisement(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey("auth.User", on_delete=models.CASCADE)
-    count_view = models.IntegerField(default=0)
-    position = models.IntegerField(default=0)
+    id_advertisement = models.BigIntegerField(null=False)
+    title = models.CharField()
+    author = models.CharField()
+    count_view = models.IntegerField()
+    position = models.IntegerField()
 
     def __str__(self):
         return self.title
