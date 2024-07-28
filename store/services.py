@@ -3,6 +3,8 @@ from time import sleep
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
+from config.settings import BASE_DIR
+from store.models import Advertisement
 
 url = "https://www.farpost.ru/vladivostok/service/construction/guard/+/Системы+видеонаблюдения/"
 
@@ -36,17 +38,22 @@ def find_all_element(html, name, class_name):
         author_get = BeautifulSoup(get_ht, "html.parser")
         author = author_get.find("span", class_="userNick auto-shy").text.strip("\n")
         result[index] = {
-            "id": id,
+            "id_advertisement": int(id),
             "title": title,
             "author": author,
-            "count_view": count_view,
+            "count_view": int(count_view),
             "position": position,
         }
     return result
 
 
-response = get_html(url)
-data = find_all_element(response, "tr", "bull-list-item-js -exact")
+def save_data(file_name, data):
+    with open(file_name, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
-with open("result.json", "w", encoding="utf-8") as file:
-    json.dump(data, file, indent=4, ensure_ascii=False)
+
+def load_data_to_db():
+    Advertisement.objects.all().delete()
+    with open(BASE_DIR / "static/data.json", "r") as file:
+        for k, v in json.load(file).items():
+            Advertisement.objects.create(**v)

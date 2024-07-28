@@ -6,8 +6,10 @@ from store.models import Advertisement
 @admin.register(Advertisement)
 class AdvertisementAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
+        "id_advertisement",
         "title",
-        "description",
         "author",
-        "created_at",
+        "count_view",
+        "position",
     )
