@@ -14,9 +14,11 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_USER: postgres2
-      POSTGRES_PASSWORD: postgres2
-      POSTGRES_DB: postgres2
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres2" ]
       interval: 5s
@@ -46,53 +48,3 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-#python manage.py migrate &&
-#      python manage.py csu &&
-#      python manage.py parse_site &&
-#  pgdb:
-#    # Использование готового образа postgres
-#    image: postgres:latest
-#    # Задание переменных окружения для контейнера с postgres
-#    environment:
-#      - POSTGRES_DB=postgres2
-#      - POSTGRES_USER=postgres2
-#      - POSTGRES_PASSWORD=postgres2
-#      - POSTGRES_HOST=localhost
-#     # Задание имени контейнера для сервиса pgdb
-#    container_name: pgdb
-#     # Связывание тома с директорией в контейнере для сохранения данных postgres
-#    volumes:
-#      - pgdbdata:/var/lib/postgresql/data/
-#volumes:
-#  pgdbdata: null
-
-#version: "3.12"
-#
-#services:
-#  django:
-#    # Сборка образа для сервиса django из текущей директории
-#    build: .
-#    # Задание имени контейнера для сервиса django
-#    container_name: drf_docker
-#    # Задание команды, которую нужно запустить при запуске контейнера для сервиса django
-#    command: python manage.py runserver 0.0.0.0:8000
-#    volumes:
-#      - .:/usr/src/app
-#    # Открытие порта на хостовой машине и перенаправление на порт в контейнере
-#    ports:
-#      - 8000:8000
-#    # Зависимость от другого сервиса
-#    depends_on:
-#      - db
-#  db:
-#    image: postgres:latest
-#    restart: always
-#    environment:
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: postgres
-#      POSTGRES_DB: postgres
-#    volumes:
-#      - ./pgdata:/var/lib/postgresql/data
-#    ports:
-#      - 5432:5432
